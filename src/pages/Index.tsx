@@ -7,6 +7,7 @@ const Index = () => {
   const [query, setQuery] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
+  const [limit, setLimit] = useState("50");
 
   const handleSearch = () => {
     console.log("Searching:", { query, country, city });
@@ -65,6 +66,13 @@ const Index = () => {
               value={city}
               onChange={(e) => setCity(e.target.value)}
               className="w-20 h-8 text-sm rounded-md border-border text-secondary placeholder:text-secondary"
+            />
+            <Input
+              type="number"
+              placeholder="50"
+              value={limit}
+              onChange={(e) => setLimit(e.target.value)}
+              className="w-16 h-8 text-sm rounded-md border-border"
             />
             <button
               onClick={clearFilters}
