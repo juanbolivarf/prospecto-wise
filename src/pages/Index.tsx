@@ -1,16 +1,39 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight, X, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const Index = () => {
   const [query, setQuery] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [limit, setLimit] = useState("50");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSearch = () => {
-    console.log("Searching:", { query, country, city });
+  const handleSearch = async () => {
+    if (!query.trim()) {
+      toast.error("Please enter a search query");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('scrape-leads', {
+        body: { query, country, city, limit },
+      });
+
+      if (error) throw error;
+      
+      console.log("Results:", data);
+      toast.success("Search completed!");
+    } catch (error: any) {
+      console.error("Search error:", error);
+      toast.error(error.message || "Search failed");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const clearFilters = () => {
@@ -45,9 +68,10 @@ const Index = () => {
             <Button
               onClick={handleSearch}
               size="icon"
+              disabled={isLoading}
               className="bg-foreground hover:bg-foreground/90 text-background rounded-lg h-10 w-10 shrink-0"
             >
-              <ArrowRight className="w-4 h-4" />
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
             </Button>
           </div>
 
