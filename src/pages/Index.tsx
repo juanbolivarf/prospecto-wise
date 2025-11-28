@@ -1,71 +1,80 @@
-import { DashboardStats } from "@/components/DashboardStats";
-import { LeadsTable } from "@/components/LeadsTable";
-import { IntegrationsCard } from "@/components/IntegrationsCard";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Search, Zap } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ArrowRight, X } from "lucide-react";
 
 const Index = () => {
+  const [query, setQuery] = useState("");
+  const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
+
+  const handleSearch = () => {
+    console.log("Searching:", { query, country, city });
+  };
+
+  const clearFilters = () => {
+    setCountry("");
+    setCity("");
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10 shadow-soft">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg gradient-primary flex items-center justify-center">
-                <Sparkles className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold">ProspectAI</h1>
-                <p className="text-xs text-muted-foreground">B2B Automation Platform</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm">
-                <Search className="h-4 w-4 mr-2" />
-                Find Leads
-              </Button>
-              <Button className="gradient-primary text-white">
-                <Zap className="h-4 w-4 mr-2" />
-                Start Campaign
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-6 py-8 space-y-8">
-        {/* Welcome Section */}
-        <div className="gradient-primary rounded-2xl p-8 text-white shadow-strong">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl font-bold mb-2">
-              Automate Your B2B Prospecting
-            </h2>
-            <p className="text-white/90 mb-6">
-              Find, classify, and contact coworking spaces and cafés automatically.
-              Reduce prospecting time by 80% with AI-powered workflows.
-            </p>
-            <div className="flex gap-4">
-              <Button variant="secondary" size="lg">
-                View Tutorial
-              </Button>
-              <Button variant="outline" size="lg" className="bg-white/10 text-white border-white/20 hover:bg-white/20">
-                Documentation
-              </Button>
-            </div>
-          </div>
+    <div className="min-h-screen bg-muted flex items-center justify-center p-6">
+      <div className="w-full max-w-lg space-y-6 animate-fade-in">
+        {/* Header */}
+        <div className="text-center space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Pluria
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Encuentra espacios de coworking y cafés en segundos
+          </p>
         </div>
 
-        {/* Stats */}
-        <DashboardStats />
+        {/* Search Card */}
+        <div className="bg-card rounded-xl shadow-sm p-4 space-y-3">
+          {/* Main Search */}
+          <div className="flex items-center gap-2">
+            <Input
+              type="text"
+              placeholder="¿Qué tipo de espacios buscas? Ej: coworkings, cafés..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="flex-1 border-0 bg-transparent focus-visible:ring-0 h-10 text-foreground placeholder:text-muted-foreground"
+            />
+            <Button
+              onClick={handleSearch}
+              size="icon"
+              className="bg-foreground hover:bg-foreground/90 text-background rounded-lg h-10 w-10 shrink-0"
+            >
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
 
-        {/* Leads Table */}
-        <LeadsTable />
-
-        {/* Integrations */}
-        <IntegrationsCard />
-      </main>
+          {/* Filters Row */}
+          <div className="flex items-center gap-2">
+            <Input
+              type="text"
+              placeholder="País"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              className="w-20 h-8 text-sm rounded-md border-border"
+            />
+            <Input
+              type="text"
+              placeholder="Ciudad"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="w-20 h-8 text-sm rounded-md border-border text-secondary placeholder:text-secondary"
+            />
+            <button
+              onClick={clearFilters}
+              className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
